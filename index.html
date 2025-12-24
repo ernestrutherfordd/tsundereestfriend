@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>for you</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Playfair+Display:wght@400&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Poppins',sans-serif;
+  background:#0e2017;
+  color:white;
+  overflow:hidden;
+}
+
+/* ===== PAGE SYSTEM ===== */
+.page{
+  position:absolute;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:30px;
+}
+.page.active{display:flex}
+
+/* ===== ORNAMENT DECOR ===== */
+.ornament{
+  position:absolute;
+  font-size:1.8rem;
+  opacity:.85;
+  animation:swing 4s ease-in-out infinite;
+}
+@keyframes swing{
+  0%,100%{transform:rotate(0deg)}
+  50%{transform:rotate(6deg)}
+}
+
+/* ===== PAGE 1 ===== */
+.page1{
+  background:
+    linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.6)),
+    url("friend-photo.jpg"); /* 🔁 GANTI FOTO TEMAN */
+  background-size:cover;
+  background-position:center;
+}
+.page1 h1{
+  font-weight:300;
+  font-size:1.4rem;
+  opacity:.95;
+}
+.page1 button{
+  margin-top:20px;
+}
+
+/* ===== PAGE 2 ===== */
+.page2{
+  background:
+    radial-gradient(circle at top,#244f3b,#0e2017);
+}
+.letter{
+  background:rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:30px;
+  max-width:700px;
+  backdrop-filter:blur(6px);
+  text-align:left;
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 0 25px rgba(255,215,150,.08);
+}
+.letter h2{
+  font-family:'Playfair Display',serif;
+  font-weight:400;
+  font-size:1.3rem;
+  margin-bottom:14px;
+}
+#letterText{
+  line-height:1.9;
+  font-size:1.03rem;
+  white-space:pre-line;
+  min-height:220px;
+}
+
+/* ===== PAGE 3 ===== */
+.page3{
+  background:
+    radial-gradient(circle at top,#2f6b52,#0e2017);
+}
+.quote-box{
+  background:rgba(255,255,255,.12);
+  border-radius:24px;
+  padding:34px 28px;
+  max-width:600px;
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 0 30px rgba(255,215,150,.15),
+    inset 0 0 15px rgba(255,255,255,.05);
+  position:relative;
+}
+.quote-box::before{
+  content:"🥠";
+  position:absolute;
+  top:-18px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:2rem;
+}
+#quote{
+  font-size:1.1rem;
+  line-height:1.75;
+  min-height:90px;
+  margin-bottom:14px;
+}
+.quote-box button{
+  background:#ffe6b3;
+  color:#0e2017;
+}
+
+/* ===== NAV ===== */
+.nav{
+  position:absolute;
+  bottom:22px;
+  display:flex;
+  gap:14px;
+}
+button{
+  padding:8px 20px;
+  border:none;
+  border-radius:20px;
+  background:rgba(255,255,255,.9);
+  color:#0e2017;
+  font-size:.9rem;
+  cursor:pointer;
+}
+button:hover{opacity:.85}
+
+/* ===== SNOW ===== */
+.snow span{
+  position:fixed;
+  top:-10px;
+  width:5px;
+  height:5px;
+  background:white;
+  border-radius:50%;
+  opacity:.5;
+  animation:fall linear infinite;
+}
+@keyframes fall{
+  to{transform:translateY(110vh)}
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎶 MUSIC -->
+<audio autoplay loop>
+  <source src="christmas-music.mp3" type="audio/mpeg"> <!-- 🔁 GANTI MUSIK -->
+</audio>
+
+<div class="snow" id="snow"></div>
+
+<!-- ===== PAGE 1 ===== -->
+<div class="page page1 active">
+  <span class="ornament" style="top:20px;left:30px;">🎄</span>
+  <span class="ornament" style="top:60px;right:40px;">⭐</span>
+  <div>
+    <h1>i made this just for you</h1>
+    <button onclick="next()">open</button>
+  </div>
+</div>
+
+<!-- ===== PAGE 2 ===== -->
+<div class="page page2">
+  <span class="ornament" style="top:30px;left:50px;">🎀</span>
+  <span class="ornament" style="top:80px;right:60px;">✨</span>
+  <div class="letter">
+    <h2>hey,</h2>
+    <p id="letterText"></p>
+  </div>
+  <div class="nav">
+    <button onclick="back()">back</button>
+    <button onclick="next()">next</button>
+  </div>
+</div>
+
+<!-- ===== PAGE 3 ===== -->
+<div class="page page3">
+  <span class="ornament" style="top:30px;left:40px;">🎄</span>
+  <span class="ornament" style="top:70px;right:50px;">❄️</span>
+  <div class="quote-box">
+    <p id="quote">click the fortune 🤍</p>
+    <button onclick="randomQuote()">open fortune</button>
+  </div>
+  <div class="nav">
+    <button onclick="back()">back</button>
+  </div>
+</div>
+
+<script>
+const pages=document.querySelectorAll('.page');
+let current=0;
+
+function show(i){
+  pages.forEach(p=>p.classList.remove('active'));
+  pages[i].classList.add('active');
+}
+function next(){ if(current<pages.length-1){current++;show(current); if(current===1)typeLetter();} }
+function back(){ if(current>0){current--;show(current);} }
+
+/* ===== LETTER ===== */
+const letter=`i'm not great at big speeches.
+so i made this instead.
+
+christmas feels softer
+when you think about people
+who matter quietly.
+
+you're one of them.`;
+
+/* TYPE EFFECT */
+let i=0;
+function typeLetter(){
+  const el=document.getElementById("letterText");
+  el.innerHTML="";
+  i=0;
+  const timer=setInterval(()=>{
+    el.innerHTML+=letter.charAt(i);
+    i++;
+    if(i>=letter.length) clearInterval(timer);
+  },45);
+}
+
+/* ===== 40 FORTUNE QUOTES ===== */
+const quotes=[
+"you are doing better than you think.",
+"someone smiles when they see your name.",
+"your presence makes rooms softer.",
+"today doesn’t need to be perfect.",
+"you matter, even on quiet days.",
+"you leave good traces behind.",
+"someone feels safer because of you.",
+"your kindness is noticed.",
+"it’s okay to go slow.",
+"you are allowed to rest.",
+"you bring warmth without trying.",
+"good things remember you.",
+"you don’t have to prove anything.",
+"you are not forgotten.",
+"your laugh stays with people.",
+"soft hearts are brave hearts.",
+"you are more than enough today.",
+"someone is grateful for you.",
+"your effort counts.",
+"you deserve gentle days.",
+"your existence is meaningful.",
+"you are quietly important.",
+"you make moments better.",
+"you are held in good thoughts.",
+"you are doing your best.",
+"you are appreciated more than you know.",
+"your light is real.",
+"you belong here.",
+"you are a good thing.",
+"your presence is a gift.",
+"you make days warmer.",
+"you are loved in small ways.",
+"your being matters.",
+"you leave warmth behind.",
+"you are allowed to be human.",
+"you are seen.",
+"you are valued.",
+"your heart is kind.",
+"you are safe here.",
+"you are enough."
+];
+
+function randomQuote(){
+  document.getElementById("quote").innerText=
+    quotes[Math.floor(Math.random()*quotes.length)];
+}
+
+/* ===== SNOW ===== */
+for(let i=0;i<45;i++){
+  const s=document.createElement('span');
+  s.style.left=Math.random()*100+'vw';
+  s.style.animationDuration=8+Math.random()*12+'s';
+  document.getElementById('snow').appendChild(s);
+}
+</script>
+
+</body>
+</html>
